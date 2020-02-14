@@ -10,7 +10,11 @@ VIDEO STREAM HTTP
       work on own video, place the file in video folder in resources and 
       play around it.
       
+      Start the applciation and hit the below url to try it out
+      http://localhost:8080/video/stream/mp4/toystory
+      
       
 **Article about this repo**
+    
         
       
