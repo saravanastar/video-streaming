@@ -42,18 +42,18 @@ public class VideoStreamService {
             if (range == null) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .header(CONTENT_TYPE, VIDEO_CONTENT + fileType)
-                        .header(CONTENT_LENGTH, String.valueOf(fileSize - 1))
-                        .body(readByteRange(fullFileName, rangeStart, fileSize)); // Read the object and convert it as bytes
+                        .header(CONTENT_LENGTH, String.valueOf(fileSize))
+                        .body(readByteRange(fullFileName, rangeStart, fileSize - 1)); // Read the object and convert it as bytes
             }
             String[] ranges = range.split("-");
             rangeStart = Long.parseLong(ranges[0].substring(6));
             if (ranges.length > 1) {
                 rangeEnd = Long.parseLong(ranges[1]);
             } else {
-                rangeEnd = fileSize;
+                rangeEnd = fileSize - 1;
             }
             if (fileSize < rangeEnd) {
-                rangeEnd = fileSize;
+                rangeEnd = fileSize - 1;
             }
             data = readByteRange(fullFileName, rangeStart, rangeEnd);
         } catch (IOException e) {
@@ -65,7 +65,7 @@ public class VideoStreamService {
                 .header(CONTENT_TYPE, VIDEO_CONTENT + fileType)
                 .header(ACCEPT_RANGES, BYTES)
                 .header(CONTENT_LENGTH, contentLength)
-                .header(CONTENT_RANGE, BYTES + " " + rangeStart + "-" + (rangeEnd - 1) + "/" + fileSize)
+                .header(CONTENT_RANGE, BYTES + " " + rangeStart + "-" + rangeEnd + "/" + fileSize)
                 .body(data);
 
 
@@ -90,8 +90,8 @@ public class VideoStreamService {
                 bufferedOutputStream.write(data, 0, nRead);
             }
             bufferedOutputStream.flush();
-            byte[] result = new byte[(int) (end - start)];
-            System.arraycopy(bufferedOutputStream.toByteArray(), (int) start, result, 0, (int) (end - start));
+            byte[] result = new byte[(int) (end - start) + 1];
+            System.arraycopy(bufferedOutputStream.toByteArray(), (int) start, result, 0, result.length);
             return result;
         }
     }
