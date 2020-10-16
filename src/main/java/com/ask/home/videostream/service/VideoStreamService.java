@@ -50,7 +50,9 @@ public class VideoStreamService {
             if (ranges.length > 1) {
                 rangeEnd = Long.parseLong(ranges[1]);
             } else {
-                rangeEnd = fileSize - 1;
+                // if the rangeEnd is not set, we can still return a partial 
+                // (Many browser sends a "Range: bytes 0-" to test if the server handles ranged requests) 
+				rangeEnd = rangeStart + RESPONSE_MAX_RANGE - 1;
             }
             if (fileSize < rangeEnd) {
                 rangeEnd = fileSize - 1;
@@ -84,14 +86,19 @@ public class VideoStreamService {
         Path path = Paths.get(getFilePath(), filename);
         try (InputStream inputStream = (Files.newInputStream(path));
              ByteArrayOutputStream bufferedOutputStream = new ByteArrayOutputStream()) {
+            
+            // we don't want to read all the file every times if we return a range of it
+            long isPosition = inputStream.skip(start);
+            
             byte[] data = new byte[BYTE_RANGE];
             int nRead;
-            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+			while (isPosition <= end && (nRead = inputStream.read(data, 0, data.length)) != -1) {
                 bufferedOutputStream.write(data, 0, nRead);
+				isPosition += nRead;
             }
             bufferedOutputStream.flush();
             byte[] result = new byte[(int) (end - start) + 1];
-            System.arraycopy(bufferedOutputStream.toByteArray(), (int) start, result, 0, result.length);
+			System.arraycopy(bufferedOutputStream.toByteArray(), 0, result, 0, result.length);
             return result;
         }
     }

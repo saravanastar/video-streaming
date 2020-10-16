@@ -11,6 +11,8 @@ public class ApplicationConstants {
     public static final String BYTES = "bytes";
     public static final int BYTE_RANGE = 1024;
 
+    public static final int RESPONSE_MAX_RANGE = 1048576; // 1MB (max size of a chunck sent to client)
+    
     private ApplicationConstants() {
     }
 }
