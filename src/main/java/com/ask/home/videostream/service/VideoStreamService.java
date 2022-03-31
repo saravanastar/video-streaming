@@ -77,14 +77,6 @@ public class VideoStreamService {
 
     }
 
-    public byte[] readByteRangeNew(String filename, long start, long end) throws IOException {
-        Path path = Paths.get(getFilePath(), filename);
-        byte[] data = Files.readAllBytes(path);
-        byte[] result = new byte[(int) (end - start) + 1];
-        System.arraycopy(data, (int) start, result, 0, (int) (end - start) + 1);
-        return result;
-    }
-
     /**
      * ready file byte by byte.
      *
@@ -94,6 +86,15 @@ public class VideoStreamService {
      * @return byte array.
      * @throws IOException exception.
      */
+    public byte[] readByteRangeNew(String filename, long start, long end) throws IOException {
+        Path path = Paths.get(getFilePath(), filename);
+        byte[] data = Files.readAllBytes(path);
+        byte[] result = new byte[(int) (end - start) + 1];
+        System.arraycopy(data, (int) start, result, 0, (int) (end - start) + 1);
+        return result;
+    }
+
+
     public byte[] readByteRange(String filename, long start, long end) throws IOException {
         Path path = Paths.get(getFilePath(), filename);
         try (InputStream inputStream = (Files.newInputStream(path));
