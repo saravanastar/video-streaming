@@ -1,6 +1,9 @@
 
 server:
+  servlet:
+    context-path: /video-service
   port: 8080
+
 
 
 video:
