@@ -11,5 +11,6 @@ import java.util.List;
 public interface ContentAdapter {
     Content getContent(ContentRequest contentRequest);
     Long getContentSize(ContentRequest contentRequest);
-    List<Content> listAllContents();
+    List<Content> findAllContents();
+    Content findFileByKey(final String fileKey);
 }

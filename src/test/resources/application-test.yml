@@ -1,0 +1,11 @@
+
+server:
+  servlet:
+    context-path: /video-service
+  port: 8080
+
+
+
+video:
+  content:
+    path: ${VIDEO_CONTENT_PATH:target/classes/video}

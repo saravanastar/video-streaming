@@ -3,7 +3,6 @@ package com.ask.home.videostream.controller;
 import com.ask.home.videostream.model.Content;
 import com.ask.home.videostream.service.VideoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -19,16 +18,19 @@ public class VideoController {
         this.videoService = videoService;
     }
 
-    @GetMapping("/stream/{fileType}/{fileName}")
-    public Mono<ResponseEntity<byte[]>> streamVideo(ServerHttpResponse serverHttpResponse, @RequestHeader(value = "Range", required = false) String httpRangeList,
-                                                    @PathVariable("fileType") String fileType,
-                                                    @PathVariable("fileName") String fileName) {
-        return Mono.just(videoService.prepareContent(fileName, fileType, httpRangeList));
+    @GetMapping("/stream/{fileType}/{filePathAndName}")
+    public Mono<ResponseEntity<byte[]>> streamVideoByPath(@RequestHeader(value = "Range", required = false) String httpRangeList, @PathVariable("fileType") String fileType, @PathVariable("filePathAndName") String filePathAndName) {
+        return Mono.just(videoService.prepareContentByFilePath(httpRangeList, filePathAndName, fileType));
+    }
+
+    @GetMapping("/stream/object_key/{objectKey}")
+    public Mono<ResponseEntity<byte[]>> streamVideoByObjectKey(@RequestHeader(value = "Range", required = false) String httpRangeList, @PathVariable("objectKey") String objectKey) {
+        return Mono.just(videoService.prepareContentByObjectKey(httpRangeList, objectKey));
     }
 
     @GetMapping
-    public Mono<ResponseEntity<List<Content>>> listVideos() {
+    public Mono<ResponseEntity<List<Content>>> getAllContents() {
 
-        return Mono.just(videoService.listContents());
+        return Mono.just(videoService.getAllContents());
     }
 }
