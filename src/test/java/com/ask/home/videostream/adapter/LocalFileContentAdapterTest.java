@@ -6,9 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,8 +40,13 @@ class LocalFileContentAdapterTest {
 
     @Test
     void findFileByKeyWithValidKey() {
+        Map<String, Content> cache = new HashMap<>();
         String fileKey = "957e9073-9aec-3be2-a94e-268312e13bed";
+        Content content = Content.builder().contentName("test").objectKey(fileKey).build();
+        cache.put(fileKey, content);
+        ReflectionTestUtils.setField(localFileContentAdapter, "localFileMap", cache);
         Content responseContent = localFileContentAdapter.findFileByKey(fileKey);
+
         assertNotNull(responseContent);
         assertNotNull(responseContent.getContentName());
         assertNotNull(responseContent.getObjectKey());
