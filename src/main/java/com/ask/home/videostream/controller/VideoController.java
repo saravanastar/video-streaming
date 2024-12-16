@@ -23,7 +23,7 @@ public class VideoController {
         return Mono.just(videoService.prepareContentByFilePath(httpRangeList, filePathAndName, fileType));
     }
 
-    @GetMapping("/stream/object_key/{objectKey}")
+    @GetMapping("/stream/object-key/{objectKey}")
     public Mono<ResponseEntity<byte[]>> streamVideoByObjectKey(@RequestHeader(value = "Range", required = false) String httpRangeList, @PathVariable("objectKey") String objectKey) {
         return Mono.just(videoService.prepareContentByObjectKey(httpRangeList, objectKey));
     }

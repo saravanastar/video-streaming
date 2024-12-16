@@ -46,7 +46,7 @@ class VideoControllerTest {
     @Test
     void testStreamVideoWithObjectKey() {
         when(videoService.prepareContentByObjectKey(any(), any())).thenReturn(ResponseEntity.ok(new byte[]{}));
-        webTestClient.get().uri("/api/v1/videos/stream/object_key/test-key").exchange().expectStatus().is2xxSuccessful();
+        webTestClient.get().uri("/api/v1/videos/stream/object-key/test-key").exchange().expectStatus().is2xxSuccessful();
 
         verify(videoService, times(0)).prepareContentByFilePath(any(), any(), any());
         verify(videoService, times(1)).prepareContentByObjectKey(any(), any());
