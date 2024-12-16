@@ -1,0 +1,13 @@
+services:
+  video-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./video:/tmp/content
+    environment:
+      VIDEO_CONTENT_PATH: /tmp/content
+    ports:
+      - 8080:8080
+
+
